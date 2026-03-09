@@ -1,0 +1,24 @@
+# Docker Compose — Orquestra os containers de backend e frontend
+# Uso: docker compose up --build
+services:
+  server:
+    build: ./server
+    container_name: albion-api-server
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./server/.env.example
+    volumes:
+      - ./server/src:/app/src
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    container_name: albion-api-client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    volumes:
+      - ./client/src:/app/src
+    restart: unless-stopped

@@ -1,0 +1,7 @@
+/**
+ * Placeholder para world.json do ao-bin-dumps.
+ * Será populado com a cópia local de:
+ * https://github.com/ao-data/ao-bin-dumps/blob/master/formatted/world.json
+ * Contém: IDs e nomes das cidades/localizações do jogo.
+ */
+[]

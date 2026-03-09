@@ -1,0 +1,13 @@
+{
+  "name": "albion-api-server",
+  "version": "1.0.0",
+  "description": "API intermediária para dados do Albion Online (AODB)",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"TODO: configurar testes\""
+  },
+  "keywords": ["albion", "api", "aodb"],
+  "license": "MIT"
+}

@@ -1,0 +1,7 @@
+/**
+ * Placeholder para items.json do ao-bin-dumps.
+ * Será populado com a cópia local de:
+ * https://github.com/ao-data/ao-bin-dumps/blob/master/formatted/items.json
+ * Contém: UniqueName, LocalizedNames (PT-BR), Index para cada item do jogo.
+ */
+[]
