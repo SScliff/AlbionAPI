@@ -5,3 +5,10 @@
  * europe → https://europe.albion-online-data.com (Europe)
  * Default: west (Americas)
  */
+const servers = {
+    west: "https://west.albion-online-data.com",
+    east: "https://east.albion-online-data.com",
+    europe: "https://europe.albion-online-data.com",
+};
+
+module.exports = servers;
