@@ -7,6 +7,6 @@ const router = require("express").Router();
 
 router.use("/prices", require("./prices"));
 router.use("/items", require("./items"));
-
+router.use("/history", require("./history"));
 
 module.exports = router;

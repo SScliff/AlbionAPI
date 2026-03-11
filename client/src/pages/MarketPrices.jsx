@@ -1,26 +1,42 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import api from '../api/client';
 import SearchBar from '../components/SearchBar/SearchBar';
 
+const LOCATIONS = ['Black Market', 'Brecilien', 'Bridgewatch', 'Caerleon', 'Fort Sterling', 'Lymhurst', 'Martlock', 'Thetford'];
+const QUALITIES = [
+  { value: '1', label: 'Normal' },
+  { value: '2', label: 'Bom' },
+  { value: '3', label: 'Excepcional' },
+  { value: '4', label: 'Excelente' },
+  { value: '5', label: 'Obra-Prima' }
+];
+
 const MarketPrices = () => {
   const { itemId } = useParams();
   const navigate = useNavigate();
-  
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialLoc = queryParams.get('locations') || '';
+  const initialQual = queryParams.get('qualities') || '';
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasQuality, setHasQuality] = useState(true);
   const [currentItem, setCurrentItem] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(initialLoc);
+  const [selectedQuality, setSelectedQuality] = useState(initialQual);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (itemId) {
       fetchPrices(itemId);
       // Fazer uma checagem rápida no metadata pra saber se tem qualidade e pegar a imagem/nome
       checkItemQuality(itemId);
     }
-  }, [itemId]);
+  }, [itemId, selectedLocation, selectedQuality]);
 
   const checkItemQuality = async (id) => {
     try {
@@ -44,7 +60,15 @@ const MarketPrices = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get(`/prices/${id}`);
+      let url = `/prices/${id}`;
+      const params = new URLSearchParams();
+      if (selectedLocation) params.append('locations', selectedLocation);
+      if (selectedQuality) params.append('qualities', selectedQuality);
+      
+      const queryString = params.toString();
+      if (queryString) url += `?${queryString}`;
+
+      const response = await api.get(url);
       setData(response.data);
     } catch (err) {
       console.error(err);
@@ -121,6 +145,32 @@ const MarketPrices = () => {
 
       <div className="card" style={{ marginBottom: '1.5rem', overflow: 'visible' }}>
          <SearchBar onSelect={handleSelectItem} />
+         
+         {itemId && (
+           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+             <select 
+               className="input-base" 
+               style={{ flex: 1, minWidth: '200px' }}
+               value={selectedLocation}
+               onChange={(e) => setSelectedLocation(e.target.value)}
+             >
+               <option value="">Todas as Cidades</option>
+               {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+             </select>
+
+             {hasQuality && (
+               <select 
+                 className="input-base" 
+                 style={{ flex: 1, minWidth: '200px' }}
+                 value={selectedQuality}
+                 onChange={(e) => setSelectedQuality(e.target.value)}
+               >
+                 <option value="">Todas as Qualidades</option>
+                 {QUALITIES.map(q => <option key={q.value} value={q.value}>{q.label}</option>)}
+               </select>
+             )}
+           </div>
+         )}
       </div>
 
       {loading && (
